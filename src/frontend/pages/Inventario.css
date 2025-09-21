@@ -85,8 +85,134 @@
   margin-top: 0.5rem;
 }
 .inventario-list {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
+
+.inventario-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.inventario-list-header h3 {
+  margin: 0;
+  color: #334155;
+  font-size: 1.25rem;
+}
+
+.search-bar input {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  width: 250px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.alimento-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.alimento-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  background-color: #f1f5f9;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-details {
+  flex: 1;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.card-comedor {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.card-quantity {
+  text-align: right;
+}
+
+.quantity-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #6366f1;
+  display: block;
+  line-height: 1;
+}
+
+.quantity-unit {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.empty-inventario {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  margin-top: 2rem;
+  border: 2px dashed #e2e8f0;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-inventario h4 {
+  font-size: 1.5rem;
+  color: #334155;
+  margin: 0 0 0.5rem;
+}
+
+.empty-inventario p {
+  color: #64748b;
+  margin: 0;
+}
+
 .inventario-list table {
   width: 100%;
   border-collapse: collapse;

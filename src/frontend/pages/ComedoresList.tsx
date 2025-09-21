@@ -113,7 +113,6 @@ const ComedoresList: React.FC = () => {
         setError(errData.message || 'Error al cargar comedores');
       }
     } catch (err) {
-      console.error(err);
       setError('Error de conexión');
     } finally {
       setLoading(false);
@@ -178,7 +177,6 @@ const ComedoresList: React.FC = () => {
           alert(errData.message || 'Error al actualizar comedor');
         }
       } catch (err) {
-        console.error(err);
         alert('Error de conexión al guardar cambios');
       } finally {
         setSaving(false);

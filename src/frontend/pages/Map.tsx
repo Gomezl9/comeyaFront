@@ -22,18 +22,14 @@ const Map: React.FC = () => {
         },
       });
       const data = await response.json();
-      console.log('Datos recibidos del backend:', data);
       
       let comedoresData = [];
       if (Array.isArray(data)) {
         comedoresData = data;
-        console.log('Comedores cargados (array directo):', data);
       } else if (data.data && Array.isArray(data.data)) {
         comedoresData = data.data;
-        console.log('Comedores cargados (data.data):', data.data);
       } else {
         comedoresData = [];
-        console.log('No se encontraron comedores');
       }
 
       // Inicializar todos los comedores como activos por defecto
@@ -47,7 +43,6 @@ const Map: React.FC = () => {
       setComedores(comedoresData);
       setComedoresEstados(estadosIniciales);
     } catch (error) {
-      console.error('Error al cargar comedores:', error);
       setComedores([]);
     } finally {
       setLoading(false);
@@ -97,7 +92,6 @@ const Map: React.FC = () => {
     let lastUpdateTime = localStorage.getItem('comedoresUpdated') || '0';
 
     const handleComedoresUpdate = () => {
-      console.log('Se detectó un cambio en comedores, actualizando...');
       fetchComedores();
     };
 
@@ -105,7 +99,6 @@ const Map: React.FC = () => {
     const checkForUpdates = () => {
       const currentUpdateTime = localStorage.getItem('comedoresUpdated');
       if (currentUpdateTime && currentUpdateTime !== lastUpdateTime) {
-        console.log('Cambio detectado en localStorage, actualizando...');
         lastUpdateTime = currentUpdateTime;
         fetchComedores();
       }

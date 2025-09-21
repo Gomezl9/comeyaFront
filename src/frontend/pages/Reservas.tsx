@@ -72,19 +72,11 @@ const Reservas: React.FC = () => {
 
     const fetchReservas = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/api/reservas', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-        });
-        if (!response.ok) throw new Error(`Error ${response.status}`);
+        const response = await fetch("http://localhost:3000/api/reservas");
         const data = await response.json();
         setReservas(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error('Error al cargar reservas:', error);
-        setReservas([]);
+        // console.error("Error al obtener las reservas:", error); // Eliminado
       }
     };
 

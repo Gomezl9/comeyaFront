@@ -43,13 +43,6 @@ const Servicios: React.FC = () => {
 				return null;
 			}
 			const payload = JSON.parse(atob(token.split('.')[1]));
-			console.log('Token decodificado completo:', payload);
-			console.log('Campos disponibles:', Object.keys(payload));
-			console.log('payload.id:', payload.id);
-			console.log('payload.user_id:', payload.user_id);
-			console.log('payload.userId:', payload.userId);
-			console.log('payload.user:', payload.user);
-			console.log('payload.sub:', payload.sub);
 			
 			// Intentar diferentes campos comunes
 			const userId = payload.id || 
@@ -86,7 +79,6 @@ const Servicios: React.FC = () => {
 				// Cargar comedores
 				const comedoresResponse = await fetch('http://localhost:3000/api/comedores');
 				const comedoresData = await comedoresResponse.json();
-				console.log('Comedores obtenidos de la API:', comedoresData);
 				setComedores(Array.isArray(comedoresData) ? comedoresData : []);
 			} catch (err) {
 				console.error('Error cargando datos:', err);
@@ -109,16 +101,6 @@ const Servicios: React.FC = () => {
 		console.log(`Comedor: ${comedor.nombre}, creado_por: ${comedor.creado_por}, currentUserId: ${currentUserId}, match: ${comedor.creado_por === currentUserId}`);
 		return comedor.creado_por === currentUserId;
 	});
-	
-	// Debug info
-	console.log('=== DEBUG SERVICIOS ===');
-	console.log('Comedores cargados:', comedores);
-	console.log('ID del usuario actual:', currentUserId);
-	console.log('Tipo de currentUserId:', typeof currentUserId);
-	console.log('Comedores del usuario:', comedoresDelUsuario);
-	console.log('Cantidad de comedores del usuario:', comedoresDelUsuario.length);
-	console.log('========================');
-
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
 		const { name, value } = e.target;
 		setForm(prev => ({ ...prev, [name]: value }));

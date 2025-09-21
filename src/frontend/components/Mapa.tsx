@@ -148,10 +148,8 @@ const Mapa: React.FC<MapaProps> = ({
     multipleMarkers.current.forEach(marker => marker.remove());
     multipleMarkers.current = [];
 
-    console.log('Total ubicaciones a procesar:', ubicaciones.length);
-    ubicaciones.forEach((ubi, index) => {
+    comedores.forEach((comedor, index) => {
       const coords = ubi.coordinates || [];
-      console.log(`Procesando ubicación ${index}:`, coords);
       if (coords.length === 2 && typeof coords[0] === 'number' && typeof coords[1] === 'number' && !isNaN(coords[0]) && !isNaN(coords[1])) {
         const nombre = nombres[index] || 'Ubicación';
         const icono = iconos[index] || '📍';
@@ -181,8 +179,7 @@ const Mapa: React.FC<MapaProps> = ({
         multipleMarkers.current.push(marker);
       }
     });
-    console.log('Marcadores creados:', multipleMarkers.current.length);
-  }, [ubicaciones, iconos, nombres]);
+  }, [comedores, iconos, nombres]);
 
   // Render del contenedor del mapa
   return (

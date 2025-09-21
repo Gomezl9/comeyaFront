@@ -15,6 +15,8 @@ const unidades = ['kg', 'g', 'l', 'ml', 'unidades', 'paquetes'];
 const Inventario: React.FC = () => {
   const [alimentos, setAlimentos] = useState<Alimento[]>([]);
   const [comedores, setComedores] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState(''); // Estado para la búsqueda
+
   // Obtener usuario logueado
   const userStr = localStorage.getItem('user');
   let usuario_id = undefined;
@@ -50,10 +52,8 @@ const Inventario: React.FC = () => {
       try {
         const response = await fetch('http://localhost:3000/api/inventarios');
         const data = await response.json();
-        console.log('Inventarios cargados:', data);
         setAlimentos(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Error cargando inventarios:', err);
         setAlimentos([]);
       }
     };
@@ -65,6 +65,23 @@ const Inventario: React.FC = () => {
   const [form, setForm] = useState<Alimento>({ comedor_id: 1, nombre: '', cantidad: 0, unidad: 'kg' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Lógica para filtrar alimentos
+  const filteredAlimentos = alimentos.filter(alimento =>
+    alimento.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (comedores.find(c => c.id === alimento.comedor_id)?.nombre || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Función para obtener un ícono según la unidad
+  const getUnitIcon = (unidad: string) => {
+    switch (unidad.toLowerCase()) {
+      case 'kg': case 'g': return '⚖️';
+      case 'l': case 'ml': return '💧';
+      case 'unidades': return '📦';
+      case 'paquetes': return '🥡';
+      default: return '🍴';
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -92,9 +109,6 @@ const Inventario: React.FC = () => {
     setLoading(true);
     setError(null);
     
-    // Debug: mostrar datos que se van a enviar
-    console.log('Datos a enviar:', form);
-    
     // Enviar al backend
     fetch('http://localhost:3000/api/inventarios', {
       method: 'POST',
@@ -104,14 +118,11 @@ const Inventario: React.FC = () => {
       body: JSON.stringify(form),
     })
       .then(async res => {
-        console.log('Respuesta del servidor:', res.status, res.statusText);
         if (!res.ok) {
           const errorData = await res.json().catch(() => ({}));
-          console.error('Error del servidor:', errorData);
           throw new Error(errorData.message || 'Error al guardar en la base');
         }
         const saved = await res.json();
-        console.log('Datos guardados:', saved);
         setAlimentos(prev => [...prev, saved]);
         setShowForm(false);
         setForm({ comedor_id: 1, nombre: '', cantidad: 0, unidad: 'kg' });
@@ -165,35 +176,45 @@ const Inventario: React.FC = () => {
               {error && <div className="error-message">{error}</div>}
             </form>
           )}
+
+          <div className="inventario-list-header">
+            <h3>Listado de Alimentos</h3>
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="Buscar por nombre o comedor..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+
           <div className="inventario-list">
-            {alimentos.length === 0 ? (
-              <p>No hay alimentos en el inventario.</p>
+            {filteredAlimentos.length === 0 ? (
+              <div className="empty-inventario">
+                <div className="empty-icon">🍽️</div>
+                <h4>Inventario Vacío</h4>
+                <p>{searchTerm ? 'No se encontraron alimentos con ese criterio.' : 'Aún no has agregado alimentos. ¡Empieza ahora!'}</p>
+              </div>
             ) : (
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Comedor</th>
-                    <th>Nombre</th>
-                    <th>Cantidad</th>
-                    <th>Unidad</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {alimentos.map(a => {
-                    const comedor = comedores.find(c => c.id === a.comedor_id);
-                    return (
-                      <tr key={a.id}>
-                        <td>{a.id}</td>
-                        <td>{comedor ? comedor.nombre : a.comedor_id}</td>
-                        <td>{a.nombre}</td>
-                        <td>{a.cantidad}</td>
-                        <td>{a.unidad}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="cards-container">
+                {filteredAlimentos.map(a => {
+                  const comedor = comedores.find(c => c.id === a.comedor_id);
+                  return (
+                    <div key={a.id} className="alimento-card">
+                      <div className="card-icon">{getUnitIcon(a.unidad)}</div>
+                      <div className="card-details">
+                        <h4 className="card-title">{a.nombre}</h4>
+                        <p className="card-comedor">{comedor ? comedor.nombre : `Comedor ID: ${a.comedor_id}`}</p>
+                      </div>
+                      <div className="card-quantity">
+                        <span className="quantity-number">{a.cantidad}</span>
+                        <span className="quantity-unit">{a.unidad}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
