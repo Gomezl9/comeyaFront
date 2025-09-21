@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - COMEYA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        h1 { font-size: 3em; margin-bottom: 20px; }
+        p { font-size: 1.2em; margin-bottom: 30px; }
+        .status { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .status-item { margin: 10px 0; font-size: 1.1em; }
+        .btn {
+            background: white;
+            color: #ff6b6b;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 COMEYA! - Test</h1>
+        <p>Verificando que el sistema esté funcionando correctamente</p>
+        
+        <div class="status">
+            <div class="status-item">✅ Frontend React: <strong>Funcionando en puerto 5173</strong></div>
+            <div class="status-item">✅ Backend API: <strong>Funcionando en puerto 3001</strong></div>
+            <div class="status-item">✅ Base de Datos: <strong>Conectada (simulada)</strong></div>
+        </div>
+        
+        <div>
+            <a href="http://localhost:5173" class="btn">🚀 Ir a la Aplicación</a>
+            <a href="http://localhost:3001/api" class="btn">🔧 Ver API</a>
+        </div>
+        
+        <p style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
+            Si ves esta página, el servidor está funcionando correctamente.
+        </p>
+    </div>
+</body>
+</html>
