@@ -261,7 +261,7 @@ const Servicios: React.FC = () => {
 								</select>
 								{comedoresDelUsuario.length === 0 && (
 									<p style={{ color: '#e53e3e', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-										⚠️ Primero debes crear un comedor para poder agregar servicios
+										Primero debes crear un comedor para poder agregar servicios
 									</p>
 								)}
 							</div>
@@ -300,7 +300,7 @@ const Servicios: React.FC = () => {
 					)}
 
 					<div className="servicios-list">
-						<h3>📋 Servicios Registrados</h3>
+						<h3>Servicios Registrados</h3>
 						{servicios.length === 0 ? (
 							<p className="no-data">No hay servicios registrados.</p>
 						) : (

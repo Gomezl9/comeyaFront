@@ -94,12 +94,12 @@ const ComedorForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="comedor-form">
       <div className="form-header">
-        <h2>🍽️ Registrar Nuevo Comedor</h2>
+        <h2>Registrar Nuevo Comedor</h2>
         <p>Complete la información del comedor que desea registrar</p>
       </div>
 
       <div className="form-section">
-        <h3>📝 Información Básica</h3>
+        <h3>Información Básica</h3>
 
         <div className="form-group">
           <label>Nombre *</label>
@@ -161,7 +161,7 @@ const ComedorForm: React.FC = () => {
 
       <div className="form-actions">
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? 'Registrando...' : '🍽️ Registrar Comedor'}
+          {loading ? 'Registrando...' : ' Registrar Comedor'}
         </button>
       </div>
     </form>

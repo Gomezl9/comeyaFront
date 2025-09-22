@@ -68,7 +68,7 @@ const Sidebar: React.FC = () => {
           }}
           className="logout-btn"
         >
-          🚪 Cerrar Sesión
+          Cerrar Sesión
         </button>
       </div>
     </div>

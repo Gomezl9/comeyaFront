@@ -158,7 +158,7 @@ const Map: React.FC = () => {
   return (
     <div className="map-container">
       <div className="map-header">
-        <h1>🗺️ Mapa de Comedores</h1>
+        <h1>Mapa de Comedores</h1>
         <button 
           onClick={() => {
             fetchComedores();
@@ -167,7 +167,7 @@ const Map: React.FC = () => {
           className="refresh-btn"
           title="Actualizar comedores"
         >
-          🔄 Actualizar
+          Actualizar
         </button>
       </div>
 
@@ -317,9 +317,9 @@ const Map: React.FC = () => {
             
             <div className="modal-body">
               <div className="comedor-details">
-                <p><strong>📍 Dirección:</strong> {selectedComedor.direccion}</p>
-                <p><strong>🕒 Horarios:</strong> {selectedComedor.horarios || 'No especificado'}</p>
-                <p><strong>📊 Estado:</strong> 
+                <p><strong>Dirección:</strong> {selectedComedor.direccion}</p>
+                <p><strong>Horarios:</strong> {selectedComedor.horarios || 'No especificado'}</p>
+                <p><strong>Estado:</strong> 
                   <span 
                     className="status-badge"
                     style={{ 
@@ -345,7 +345,7 @@ const Map: React.FC = () => {
                 
                 {/* Inventario del comedor */}
                 <div className="comedor-inventory">
-                  <p><strong>📦 Inventario:</strong></p>
+                  <p><strong>Inventario:</strong></p>
                   <ul>
                     {inventarios.filter(i => i.comedor_id === selectedComedor.id).map(item => (
                       <li key={item.id}>{item.nombre}: {item.cantidad} {item.unidad}</li>
@@ -358,7 +358,7 @@ const Map: React.FC = () => {
                 
                 {/* Servicios asociados al comedor */}
                 <div className="comedor-services">
-                  <p><strong>🧩 Servicios:</strong></p>
+                  <p><strong>Servicios:</strong></p>
                   <ul>
                     {comedorServicios
                       .filter(cs => cs.comedor_id === selectedComedor.id)

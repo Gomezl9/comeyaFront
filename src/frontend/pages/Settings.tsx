@@ -43,10 +43,10 @@ const Settings: React.FC = () => {
   };
 
   const tabs = [
-    { id: 'notifications', label: '🔔 Notificaciones', icon: '🔔' },
-    { id: 'privacy', label: '🔒 Privacidad', icon: '🔒' },
-    { id: 'system', label: '⚙️ Sistema', icon: '⚙️' },
-    { id: 'security', label: '🛡️ Seguridad', icon: '🛡️' }
+    { id: 'notifications', label: 'Notificaciones'},
+    { id: 'privacy', label: 'Privacidad' },
+    { id: 'system', label: 'Sistema'},
+    { id: 'security', label: 'Seguridad'}
   ];
 
   return (
@@ -65,7 +65,6 @@ const Settings: React.FC = () => {
                 className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
                 onClick={() => setActiveTab(tab.id)}
               >
-                <span className="nav-icon">{tab.icon}</span>
                 <span className="nav-label">{tab.label}</span>
               </button>
             ))}
@@ -131,7 +130,7 @@ const Settings: React.FC = () => {
 
           {activeTab === 'privacy' && (
             <div className="settings-section">
-              <h2>🔒 Configuración de Privacidad</h2>
+              <h2>Configuración de Privacidad</h2>
               <p>Controla qué información es visible para otros usuarios.</p>
               
               <div className="settings-group">
@@ -187,7 +186,7 @@ const Settings: React.FC = () => {
 
           {activeTab === 'system' && (
             <div className="settings-section">
-              <h2>⚙️ Configuración del Sistema</h2>
+              <h2>Configuración del Sistema</h2>
               <p>Personaliza la apariencia y comportamiento de la aplicación.</p>
               
               <div className="settings-group">
@@ -247,7 +246,7 @@ const Settings: React.FC = () => {
 
           {activeTab === 'security' && (
             <div className="settings-section">
-              <h2>🛡️ Configuración de Seguridad</h2>
+              <h2>Configuración de Seguridad</h2>
               <p>Protege tu cuenta con configuraciones de seguridad avanzadas.</p>
               
               <div className="settings-group">
@@ -307,13 +306,13 @@ const Settings: React.FC = () => {
                 
                 <div className="security-actions">
                   <button className="security-btn primary">
-                    🔑 Cambiar Contraseña
+                    Cambiar Contraseña
                   </button>
                   <button className="security-btn secondary">
-                    📱 Configurar 2FA
+                    Configurar 2FA
                   </button>
                   <button className="security-btn warning">
-                    🚪 Cerrar Todas las Sesiones
+                    Cerrar Todas las Sesiones
                   </button>
                 </div>
               </div>
@@ -322,7 +321,7 @@ const Settings: React.FC = () => {
 
           <div className="settings-footer">
             <button onClick={handleSave} className="save-settings-btn">
-              💾 Guardar Configuraciones
+              Guardar Configuraciones
             </button>
           </div>
         </div>

@@ -120,7 +120,7 @@ const DonacionesDinero: React.FC = () => {
           >
             ← Volver
           </button>
-          <h1>💰 Donar Dinero</h1>
+          <h1>Donar Dinero</h1>
           <p>Apoya económicamente a los comedores comunitarios</p>
         </div>
 
@@ -143,7 +143,7 @@ const DonacionesDinero: React.FC = () => {
                 {errors.monto && <span className="error-message">{errors.monto}</span>}
               </div>
               <div className="input-group">
-                <label htmlFor="fecha">� Fecha de Donación</label>
+                <label htmlFor="fecha">Fecha de Donación</label>
                 <input
                   type="date"
                   id="fecha"
@@ -154,7 +154,7 @@ const DonacionesDinero: React.FC = () => {
             </div>
             <div className="form-row">
               <div className="input-group">
-                <label htmlFor="comedor">🏢 Comedor Destinatario</label>
+                <label htmlFor="comedor">Comedor Destinatario</label>
                 <select
                   id="comedor"
                   value={comedorId}

@@ -140,10 +140,10 @@ const Inventario: React.FC = () => {
       <Sidebar />
       <div style={{ flex: 1, marginLeft: 280 }}>
         <div className="inventario-container">
-          <h2>📦 Inventario de Alimentos</h2>
+          <h2>Inventario de Alimentos</h2>
           <p className="desc">Aquí puedes ver todos los alimentos donados y agregar más al inventario.</p>
           <button className="add-btn" onClick={() => setShowForm(!showForm)}>
-            {showForm ? 'Cancelar' : '➕ Agregar Alimento'}
+            {showForm ? 'Cancelar' : 'Agregar Alimento'}
           </button>
           {showForm && (
             <form className="inventario-form" onSubmit={handleSubmit}>

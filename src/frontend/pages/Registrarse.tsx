@@ -96,7 +96,7 @@ const Registrarse: React.FC = () => {
 					
 					<form className="registrarse-form" onSubmit={handleSubmit}>
 						<div className="input-group">
-							<label htmlFor="nombre">👤 Nombre Completo</label>
+							<label htmlFor="nombre">Nombre Completo</label>
 							<input
 								type="text"
 								id="nombre"
@@ -110,7 +110,7 @@ const Registrarse: React.FC = () => {
 						</div>
 						
 						<div className="input-group">
-							<label htmlFor="email">📧 Correo Electrónico</label>
+							<label htmlFor="email">Correo Electrónico</label>
 							<input
 								type="email"
 								id="email"
@@ -124,7 +124,7 @@ const Registrarse: React.FC = () => {
 						</div>
 						
 						<div className="input-group">
-							<label htmlFor="password">🔒 Contraseña</label>
+							<label htmlFor="password">Contraseña</label>
 							<input
 								type="password"
 								id="password"

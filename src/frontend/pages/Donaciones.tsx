@@ -150,7 +150,7 @@ const Donaciones: React.FC = () => {
     <Layout>
       <div className="donaciones-container">
         <div className="donaciones-header">
-          <h1>💝 Centro de Donaciones</h1>
+          <h1>Centro de Donaciones</h1>
           <p>Ayuda a los comedores comunitarios con tu generosidad</p>
         </div>
 
@@ -161,7 +161,6 @@ const Donaciones: React.FC = () => {
               className="donation-btn alimentos-btn"
               onClick={() => navigate('/DonacionesAlimentos')}
             >
-              <div className="btn-icon">🥘</div>
               <div className="btn-content">
                 <h3>Donar Alimentos</h3>
                 <p>Contribuye con alimentos nutritivos</p>
@@ -171,7 +170,6 @@ const Donaciones: React.FC = () => {
               className="donation-btn dinero-btn"
               onClick={() => navigate('/DonacionesDinero')}
             >
-              <div className="btn-icon">💰</div>
               <div className="btn-content">
                 <h3>Donar Dinero</h3>
                 <p>Apoya económicamente a los comedores</p>
@@ -181,11 +179,7 @@ const Donaciones: React.FC = () => {
         </div>
 
         <div className="donaciones-recientes">
-          <h2>
-            {isAdmin 
-              ? '📋 Donaciones recibidas en mis comedores' 
-              : '💌 Mis Donaciones Realizadas'}
-          </h2>
+          <h2>📋 Donaciones recibidas en mis comedores</h2>
 
           {error && (
             <div className="error-message">
