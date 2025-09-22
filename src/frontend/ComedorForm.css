@@ -27,7 +27,7 @@
 
 .form-header {
   background: linear-gradient(135deg, #ff6b6b, #ffa500);
-  color: white;
+  color: rgb(0, 0, 0);
   padding: 2rem;
   text-align: center;
   position: relative;

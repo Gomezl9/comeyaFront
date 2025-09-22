@@ -153,7 +153,7 @@ const Profile: React.FC = () => {
           onClick={() => setIsEditing(!isEditing)}
           className="edit-btn"
         >
-          {isEditing ? 'Cancelar' : '✏️ Editar'}
+          {isEditing ? 'Cancelar' : 'Editar'}
         </button>
       </div>
 
@@ -216,32 +216,32 @@ const Profile: React.FC = () => {
 
                 <div className="form-actions">
                   <button onClick={handleSave} className="save-btn" disabled={loading}>
-                    💾 Guardar Cambios
+                    Guardar Cambios
                   </button>
                   <button onClick={handleCancel} className="cancel-btn">
-                    ❌ Cancelar
+                    Cancelar
                   </button>
                 </div>
               </div>
             ) : (
               <div className="info-display">
                 <div className="info-item">
-                  <span className="info-label">📧 Email:</span>
+                  <span className="info-label">Email:</span>
                   <span className="info-value">{user.email || 'No especificado'}</span>
                 </div>
 
                 <div className="info-item">
-                  <span className="info-label">📱 Teléfono:</span>
+                  <span className="info-label">Teléfono:</span>
                   <span className="info-value">{user.phone || 'No especificado'}</span>
                 </div>
 
                 <div className="info-item">
-                  <span className="info-label">📍 Dirección:</span>
+                  <span className="info-label">Dirección:</span>
                   <span className="info-value">{user.address || 'No especificada'}</span>
                 </div>
 
                 <div className="info-item">
-                  <span className="info-label">👤 Rol:</span>
+                  <span className="info-label">Rol:</span>
                   <span className="info-value">{roleIdToText(user.roleId)}</span>
                 </div>
               </div>

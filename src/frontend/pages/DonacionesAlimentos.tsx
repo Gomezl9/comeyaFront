@@ -134,7 +134,7 @@ const DonacionesAlimentos: React.FC = () => {
           >
             ← Volver
           </button>
-          <h1>🥘 Donar Alimentos</h1>
+          <h1>Donar Alimentos</h1>
           <p>Contribuye con alimentos nutritivos para los comedores comunitarios</p>
         </div>
 
@@ -142,7 +142,7 @@ const DonacionesAlimentos: React.FC = () => {
           <form onSubmit={handleSubmit} className="donacion-form">
             <div className="form-row">
               <div className="input-group">
-                <label htmlFor="cantidad">📊 Cantidad</label>
+                <label htmlFor="cantidad">Cantidad</label>
                 <div className="cantidad-input">
                   <input
                     type="number"
@@ -171,7 +171,7 @@ const DonacionesAlimentos: React.FC = () => {
               </div>
 
               <div className="input-group">
-                <label htmlFor="fecha">📅 Fecha de Donación</label>
+                <label htmlFor="fecha">Fecha de Donación</label>
                 <input
                   type="date"
                   id="fecha"
@@ -183,7 +183,7 @@ const DonacionesAlimentos: React.FC = () => {
             </div>
 
             <div className="input-group">
-              <label htmlFor="descripcion">📝 Descripción de los Alimentos</label>
+              <label htmlFor="descripcion">Descripción de los Alimentos</label>
               <textarea
                 id="descripcion"
                 value={descripcion}
@@ -198,7 +198,7 @@ const DonacionesAlimentos: React.FC = () => {
 
             <div className="form-row">
               <div className="input-group">
-                <label htmlFor="donante">👤 Nombre del Donante</label>
+                <label htmlFor="donante">Nombre del Donante</label>
                 <input
                   type="text"
                   id="donante"
@@ -212,7 +212,7 @@ const DonacionesAlimentos: React.FC = () => {
               </div>
 
               <div className="input-group">
-                <label htmlFor="telefono">📱 Teléfono de Contacto</label>
+                <label htmlFor="telefono">Teléfono de Contacto</label>
                 <input
                   type="tel"
                   id="telefono"
@@ -227,7 +227,7 @@ const DonacionesAlimentos: React.FC = () => {
             </div>
 
             <div className="input-group">
-              <label htmlFor="comedor">🏢 Comedor Destinatario</label>
+              <label htmlFor="comedor">Comedor Destinatario</label>
               <select
                 id="comedor"
                 value={comedorId}

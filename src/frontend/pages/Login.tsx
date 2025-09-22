@@ -64,7 +64,7 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-group">
-              <label htmlFor="email">📧 Correo Electrónico</label>
+              <label htmlFor="email">Correo Electrónico</label>
               <input
                 type="email"
                 id="email"
@@ -77,7 +77,7 @@ const Login: React.FC = () => {
             </div>
 
             <div className="input-group">
-              <label htmlFor="password">🔒 Contraseña</label>
+              <label htmlFor="password">Contraseña</label>
               <input
                 type="password"
                 id="password"
@@ -100,7 +100,7 @@ const Login: React.FC = () => {
                   Ingresando...
                 </>
               ) : (
-                '🚀 Iniciar Sesión'
+                'Iniciar Sesión'
               )}
             </button>
 

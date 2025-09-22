@@ -278,7 +278,7 @@ const ComedoresList: React.FC = () => {
                 {editingId === comedor.id && canEditComedor(comedor) ? (
                   <div className="edit-form">
                     <div className="form-group">
-                      <label>📍 Dirección:</label>
+                      <label>Dirección:</label>
                       <input
                         type="text"
                         value={editForm.direccion || ''}
@@ -289,7 +289,7 @@ const ComedoresList: React.FC = () => {
                     </div>
                     
                     <div className="form-group">
-                      <label>🕒 Horarios:</label>
+                      <label>Horarios:</label>
                       <input
                         type="text"
                         value={editForm.horarios || ''}
@@ -300,7 +300,7 @@ const ComedoresList: React.FC = () => {
                     </div>
                     
                     <div className="form-group">
-                      <label>🗺️ Latitud:</label>
+                      <label>Latitud:</label>
                       <input
                         type="number"
                         step="any"
@@ -312,7 +312,7 @@ const ComedoresList: React.FC = () => {
                     </div>
                     
                     <div className="form-group">
-                      <label>🗺️ Longitud:</label>
+                      <label>Longitud:</label>
                       <input
                         type="number"
                         step="any"
@@ -324,7 +324,7 @@ const ComedoresList: React.FC = () => {
                     </div>
                     
                     <div className="form-group">
-                      <label>📊 Estado:</label>
+                      <label>Estado:</label>
                       <select
                         value={editForm.activo ? 'true' : 'false'}
                         onChange={(e) => handleInputChange('activo', e.target.value === 'true')}
@@ -344,12 +344,12 @@ const ComedoresList: React.FC = () => {
                       </span>
                     </p>
                     {comedor.horarios && (
-                      <p><strong>🕒 Horarios:</strong> {comedor.horarios}</p>
+                      <p><strong>Horarios:</strong> {comedor.horarios}</p>
                     )}
                     {comedor.latitud && comedor.longitud && (
-                      <p><strong>🗺️ Coordenadas:</strong> {comedor.latitud}, {comedor.longitud}</p>
+                      <p><strong>Coordenadas:</strong> {comedor.latitud}, {comedor.longitud}</p>
                     )}
-                    <p><strong>👤 Creado por:</strong> 
+                    <p><strong>Creado por:</strong> 
                       {comedor.creado_por === currentUserId ? (
                         <span style={{ color: '#667eea', fontWeight: 'bold' }}>Tú</span>
                       ) : (

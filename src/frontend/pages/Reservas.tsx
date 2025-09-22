@@ -229,30 +229,30 @@ const Reservas: React.FC = () => {
 
   const getEstadoIcon = (estado: string) => {
     switch (estado) {
-      case 'confirmada': return '✅';
-      case 'pendiente': return '⏳';
-      case 'cancelada': return '❌';
-      default: return '❓';
+      case 'confirmada': return '';
+      case 'pendiente': return '';
+      case 'cancelada': return '';
+      default: return '';
     }
   };
   return (
     <Layout>
       <div className="reservas-container">
         <div className="reservas-header">
-          <h1>📅 Sistema de Reservas</h1>
+          <h1> Sistema de Reservas</h1>
           <p>Reserva tu lugar en los comedores comunitarios</p>
         </div>
 
         <div className="tabs-container">
           <div className="tabs">
-            <button className={`tab ${activeTab === 'nueva' ? 'active' : ''}`} onClick={() => setActiveTab('nueva')}>🆕 Nueva Reserva</button>
-            <button className={`tab ${activeTab === 'mis-reservas' ? 'active' : ''}`} onClick={() => setActiveTab('mis-reservas')}>📋 Mis Reservas</button>
-            <button className={`tab ${activeTab === 'confirmar-reservas' ? 'active' : ''}`} onClick={() => setActiveTab('confirmar-reservas')}>✅ Confirmar Reservas</button>
+            <button className={`tab ${activeTab === 'nueva' ? 'active' : ''}`} onClick={() => setActiveTab('nueva')}>Nueva Reserva</button>
+            <button className={`tab ${activeTab === 'mis-reservas' ? 'active' : ''}`} onClick={() => setActiveTab('mis-reservas')}>Mis Reservas</button>
+            <button className={`tab ${activeTab === 'confirmar-reservas' ? 'active' : ''}`} onClick={() => setActiveTab('confirmar-reservas')}>Confirmar Reservas</button>
           </div>
         </div>
         {activeTab === 'confirmar-reservas' && (
           <div className="reservas-list-section">
-            <h2>✅ Confirmar Reservas</h2>
+            <h2>Confirmar Reservas</h2>
             {/* Filtrar reservas hechas a comedores creados por el usuario logueado */}
             {usuarioLogueadoId && reservas.filter(r => {
               const comedor = comedores.find(c => c.id === r.comedor_id);
@@ -269,14 +269,14 @@ const Reservas: React.FC = () => {
                       <div className="reserva-header">
                         <div className="reserva-info">
                           <h3>{comedor ? comedor.nombre : `Comedor #${r.comedor_id}`}</h3>
-                          <p>📅 {new Date(r.fecha).toLocaleDateString()} a las {r.hora}</p>
+                          <p>{new Date(r.fecha).toLocaleDateString()} a las {r.hora}</p>
                         </div>
                         <div className="reserva-estado" style={{ backgroundColor: getEstadoColor(r.estado || '') }}>
                           {getEstadoIcon(r.estado || '')} {r.estado?.toUpperCase()}
                         </div>
                       </div>
                       <div className="reserva-details">
-                        <p>👥 Personas: {r.personas}</p>
+                        <p>Personas: {r.personas}</p>
                         <p>Usuario ID: {r.usuario_id}</p>
                       </div>
                       <div style={{marginTop:8,display:'flex',gap:8}}>
@@ -381,7 +381,7 @@ const Reservas: React.FC = () => {
             <form onSubmit={handleSubmit} className="reserva-form">
               <div className="form-row">
                 <div className="input-group">
-                  <label htmlFor="comedor_id">🏢 Comedor</label>
+                  <label htmlFor="comedor_id">Comedor</label>
                   <select id="comedor_id" value={comedorId} onChange={e => setComedorId(e.target.value)} required>
                     <option value="">Selecciona un comedor</option>
                     {comedores.map(c => (
@@ -392,24 +392,24 @@ const Reservas: React.FC = () => {
               </div>
               <div className="form-row">
                 <div className="input-group">
-                  <label htmlFor="fecha">📅 Fecha</label>
+                  <label htmlFor="fecha">Fecha</label>
                   <input type="date" id="fecha" value={fecha} onChange={e => setFecha(e.target.value)} required />
                 </div>
                 <div className="input-group">
-                  <label htmlFor="hora">🕐 Hora</label>
+                  <label htmlFor="hora">Hora</label>
                   <input type="time" id="hora" value={hora} onChange={e => setHora(e.target.value)} required />
                 </div>
               </div>
               <div className="form-row">
                 <div className="input-group">
-                  <label htmlFor="personas">👥 Personas</label>
+                  <label htmlFor="personas">Personas</label>
                   <input type="number" id="personas" value={personas} onChange={e => setPersonas(e.target.value)} min={1} required />
                 </div>
               </div>
               {/* Usuario autocompletado y oculto */}
               <input type="hidden" id="usuario_id" value={usuarioId} readOnly />
               <button type="submit" className="submit-button" disabled={loading}>
-                {loading ? <>Procesando...</> : (editId ? '💾 Guardar Cambios' : '📅 Confirmar Reserva')}
+                {loading ? <>Procesando...</> : (editId ? 'Guardar Cambios' : 'Confirmar Reserva')}
               </button>
               {editId && (
                 <button type="button" className="submit-button" style={{background:'#aaa',marginLeft:8}} onClick={() => {
@@ -423,7 +423,7 @@ const Reservas: React.FC = () => {
 
         {activeTab === 'mis-reservas' && (
           <div className="reservas-list-section">
-            <h2>📋 Mis Reservas</h2>
+            <h2>Mis Reservas</h2>
             {usuarioLogueadoId && reservas.filter(r => r.usuario_id === usuarioLogueadoId).length > 0 ? (
               <div className="reservas-list">
                 {reservas.filter(r => r.usuario_id === usuarioLogueadoId).map(r => {
@@ -433,15 +433,15 @@ const Reservas: React.FC = () => {
                       <div className="reserva-header">
                         <div className="reserva-info">
                           <h3>{comedor ? comedor.nombre : `Comedor #${r.comedor_id}`}</h3>
-                          <p>📅 {new Date(r.fecha).toLocaleDateString()} a las {r.hora}</p>
+                          <p>{new Date(r.fecha).toLocaleDateString()} a las {r.hora}</p>
                         </div>
                         <div className="reserva-estado" style={{ backgroundColor: getEstadoColor(r.estado || '') }}>
                           {getEstadoIcon(r.estado || '')} {r.estado?.toUpperCase()}
                         </div>
                       </div>
                       <div className="reserva-details">
-                        <p>👥 Personas: {r.personas}</p>
-                        <p>🏢 Comedor: {comedor ? comedor.nombre : r.comedor_id}</p>
+                        <p>Personas: {r.personas}</p>
+                        <p>Comedor: {comedor ? comedor.nombre : r.comedor_id}</p>
                       </div>
                       <div style={{marginTop:8,display:'flex',gap:8}}>
                         <button className="submit-button" style={{background:'#f39c12'}} onClick={()=>{
@@ -452,7 +452,7 @@ const Reservas: React.FC = () => {
                           setPersonas(r.personas.toString());
                           setComedorId(r.comedor_id.toString());
                           setEstado(r.estado || 'pendiente');
-                        }}>✏️ Editar</button>
+                        }}>Editar</button>
                         <button className="submit-button" style={{background:'#e74c3c'}} onClick={async()=>{
                           if(window.confirm('¿Seguro que deseas eliminar esta reserva?')){
                             setLoading(true);
@@ -480,7 +480,7 @@ const Reservas: React.FC = () => {
                               setLoading(false);
                             }
                           }
-                        }}>🗑️ Eliminar</button>
+                        }}>Eliminar</button>
                       </div>
                     </div>
                   );
