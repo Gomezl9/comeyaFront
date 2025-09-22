@@ -3,40 +3,6 @@ import { Link } from 'react-router-dom';
 import './ComedoresList.css';
 import { useAuth } from '../hooks/useAuth';
 
-// Función para obtener el ID del usuario actual desde el token
-const getCurrentUserId = (): number | null => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('No hay token en localStorage');
-      return null;
-    }
-    
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    console.log('Token decodificado completo:', payload);
-    console.log('Campos disponibles:', Object.keys(payload));
-    console.log('ID del usuario:', payload.id);
-    console.log('user_id:', payload.user_id);
-    console.log('userId:', payload.userId);
-    console.log('user:', payload.user);
-    
-    // Intentar diferentes nombres de campo para el ID
-    const userId = payload.id || 
-                   payload.user_id || 
-                   payload.userId || 
-                   payload.sub || 
-                   (payload.user && payload.user.id) ||
-                   (payload.data && payload.data.id) ||
-                   (payload.userData && payload.userData.id);
-    
-    console.log('ID encontrado:', userId);
-    return userId || null;
-  } catch (error) {
-    console.error('Error al decodificar token:', error);
-    return null;
-  }
-};
-
 interface Comedor {
   id: number;
   nombre: string;
@@ -49,7 +15,7 @@ interface Comedor {
 }
 
 const ComedoresList: React.FC = () => {
-  const { isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth(); // Usamos el user del hook
   const [comedores, setComedores] = useState<Comedor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -57,11 +23,11 @@ const ComedoresList: React.FC = () => {
   const [editForm, setEditForm] = useState<Partial<Comedor>>({});
   const [saving, setSaving] = useState(false);
   const [comedoresEstados, setComedoresEstados] = useState<Record<number, boolean>>({});
-  const [currentUserId] = useState(getCurrentUserId());
 
   // Función para verificar si el usuario puede editar un comedor
   const canEditComedor = (comedor: Comedor): boolean => {
-    return isAdmin;
+    // Solo puede editar si es admin Y si su ID es el mismo que el del creador
+    return isAdmin && comedor.creado_por === user?.id;
   };
 
   useEffect(() => {
@@ -71,7 +37,6 @@ const ComedoresList: React.FC = () => {
   // Escuchar cambios en comedores desde otros componentes
   useEffect(() => {
     const handleComedoresUpdate = () => {
-      console.log('Se detectó un cambio en comedores, actualizando estados...');
       // Recargar estados desde localStorage
       const nuevosEstados: Record<number, boolean> = {};
       comedores.forEach(comedor => {
@@ -354,7 +319,7 @@ const ComedoresList: React.FC = () => {
                       <p><strong>Coordenadas:</strong> {comedor.latitud}, {comedor.longitud}</p>
                     )}
                     <p><strong>Creado por:</strong> 
-                      {comedor.creado_por === currentUserId ? (
+                      {comedor.creado_por === user?.id ? (
                         <span style={{ color: '#667eea', fontWeight: 'bold' }}>Tú</span>
                       ) : (
                         `Usuario #${comedor.creado_por}`

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import './Inventario.css';
+import { useAuth } from '../hooks/useAuth';
 
 interface Alimento {
   id?: number;
@@ -13,32 +14,27 @@ interface Alimento {
 const unidades = ['kg', 'g', 'l', 'ml', 'unidades', 'paquetes'];
 
 const Inventario: React.FC = () => {
+  const { user } = useAuth(); // Usar el hook
   const [alimentos, setAlimentos] = useState<Alimento[]>([]);
   const [comedores, setComedores] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState(''); // Estado para la búsqueda
 
-  // Obtener usuario logueado
-  const userStr = localStorage.getItem('user');
-  let usuario_id = undefined;
-  if (userStr) {
-    try {
-      const userObj = JSON.parse(userStr);
-      if (userObj && typeof userObj.id === 'number') usuario_id = userObj.id;
-    } catch {}
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
 
-  React.useEffect(() => {
     // Cargar comedores desde la API y filtrar por usuario
     const fetchComedores = async () => {
+      if (!user) return;
       try {
-        const response = await fetch('http://localhost:3000/api/comedores');
+        const response = await fetch('http://localhost:3000/api/comedores', { headers });
         const data = await response.json();
         let lista = Array.isArray(data) ? data : (data.data || []);
-        if (usuario_id) {
-          lista = lista.filter((c: any) => c.creado_por === usuario_id);
-        }
+        lista = lista.filter((c: any) => c.creado_por === user.id);
         setComedores(lista);
-        // Si hay al menos uno, setear comedor_id por defecto
         if (lista.length > 0) {
           setForm(f => ({ ...f, comedor_id: lista[0].id }));
         }
@@ -50,17 +46,21 @@ const Inventario: React.FC = () => {
     // Cargar inventarios existentes
     const fetchInventarios = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/inventarios');
+        const response = await fetch('http://localhost:3000/api/inventarios', { headers });
+        if (!response.ok) {
+            throw new Error('No autorizado para ver el inventario.');
+        }
         const data = await response.json();
         setAlimentos(Array.isArray(data) ? data : []);
-      } catch (err) {
+      } catch (err: any) {
+        setError(err.message);
         setAlimentos([]);
       }
     };
 
     fetchComedores();
     fetchInventarios();
-  }, [usuario_id]);
+  }, [user]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<Alimento>({ comedor_id: 1, nombre: '', cantidad: 0, unidad: 'kg' });
   const [loading, setLoading] = useState(false);
@@ -109,12 +109,16 @@ const Inventario: React.FC = () => {
     setLoading(true);
     setError(null);
     
+    const token = localStorage.getItem('token');
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+
     // Enviar al backend
     fetch('http://localhost:3000/api/inventarios', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(form),
     })
       .then(async res => {

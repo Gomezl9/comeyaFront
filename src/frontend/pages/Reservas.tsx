@@ -61,14 +61,6 @@ const Reservas: React.FC = () => {
   }, []);
 
   const validateForm = () => {
-    console.log('Validando formulario:', {
-      fecha,
-      hora,
-      personas,
-      comedorId,
-      'user.id': user?.id
-    });
-    
     if (!fecha) {
       alert('La fecha es requerida');
       return false;
@@ -107,7 +99,6 @@ const Reservas: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Formulario enviado');
     
     if (!validateForm()) {
       alert('Por favor completa todos los campos correctamente');
@@ -118,15 +109,6 @@ const Reservas: React.FC = () => {
       alert('Debes iniciar sesión para hacer reservas');
       return;
     }
-
-    console.log('Datos de la reserva:', {
-      usuario_id: user.id,
-      comedor_id: parseInt(comedorId),
-      fecha,
-      hora,
-      personas: parseInt(personas),
-      estado
-    });
 
     setLoading(true);
     try {
@@ -146,8 +128,6 @@ const Reservas: React.FC = () => {
         estado
       };
       
-      console.log('Enviando petición:', reservaPayload);
-      
       if (editId) {
         response = await fetch(`http://localhost:3000/api/reservas/${editId}`, {
           method: 'PUT',
@@ -162,16 +142,12 @@ const Reservas: React.FC = () => {
         });
       }
       
-      console.log('Respuesta del servidor:', response.status, response.statusText);
-      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('Error del servidor:', errorData);
         throw new Error(errorData.message || `Error ${response.status}`);
       }
       
       const responseData = await response.json();
-      console.log('Respuesta exitosa:', responseData);
       
       alert(editId ? '¡Reserva actualizada exitosamente!' : '¡Reserva registrada exitosamente! 🎉');
       setHora(''); setPersonas(''); setComedorId(''); setEstado('pendiente');
@@ -263,7 +239,6 @@ const Reservas: React.FC = () => {
                         {r.estado === 'pendiente' && (
                           <>
                             <button type="button" className="submit-button" style={{background:'#27ae60'}} onClick={async()=>{
-                              console.log('Click confirmar', r.id);
                               setLoading(true);
                               try{
                                 const token = localStorage.getItem('token');
@@ -303,7 +278,6 @@ const Reservas: React.FC = () => {
                               }
                             }}>Confirmar</button>
                             <button type="button" className="submit-button" style={{background:'#e74c3c'}} onClick={async()=>{
-                              console.log('Click cancelar', r.id);
                               setLoading(true);
                               try{
                                 const token = localStorage.getItem('token');
