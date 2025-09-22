@@ -1,0 +1,36 @@
+{
+  "startedAt": "2025-09-22T07:43:31.776Z",
+  "endedAt": "2025-09-22T07:45:42.631Z",
+  "total": 5,
+  "passed": 3,
+  "failed": 2,
+  "results": [
+    {
+      "file": "dashboard-test.js",
+      "status": "passed",
+      "durationMs": 12394
+    },
+    {
+      "file": "registrarse-test.js",
+      "status": "passed",
+      "durationMs": 16129
+    },
+    {
+      "file": "reservas-test.js",
+      "status": "passed",
+      "durationMs": 11366
+    },
+    {
+      "file": "map-test.js",
+      "status": "failed",
+      "durationMs": 39187,
+      "error": "TimeoutError: Waiting for element to be located By(css selector, #map, [data-testid=\"map\"], canvas.mapboxgl-canvas, div.mapboxgl-canvas-container, canvas)\nWait timed out after 31272ms\n    at C:\\Users\\hogar\\Documents\\Keyllyn Gomez\\comeyaFront\\node_modules\\selenium-webdriver\\lib\\webdriver.js:929:22\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+    },
+    {
+      "file": "donaciones-alimentos-test.js",
+      "status": "failed",
+      "durationMs": 51740,
+      "error": "TimeoutError: Waiting for element to be located By(css selector, [data-testid=\"donaciones-alimentos\"], h1, h2, main)\nWait timed out after 31284ms\n    at C:\\Users\\hogar\\Documents\\Keyllyn Gomez\\comeyaFront\\node_modules\\selenium-webdriver\\lib\\webdriver.js:929:22\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+    }
+  ]
+}
