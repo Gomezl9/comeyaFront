@@ -41,49 +41,33 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchQuickStats = async () => {
       try {
-        // Intentar obtener estadísticas del backend
-        const [comedoresRes, donacionesDineroRes, donacionesInventarioRes, reservasRes] = await Promise.all([
-          fetch('/api/comedores'),
-          fetch('/api/donacionesdinero'),
-          fetch('/api/donacionesinventario'),
-          fetch('/api/reservas')
-        ]);
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error("No token found");
+        }
 
-        const comedoresData = await comedoresRes.json();
-        const donacionesDineroData = await donacionesDineroRes.json();
-        const donacionesInventarioData = await donacionesInventarioRes.json();
-        const reservasData = await reservasRes.json();
-
-        // Combinar datos de donaciones
-        const donacionesCombinadas = [
-          ...(Array.isArray(donacionesDineroData) ? donacionesDineroData : []),
-          ...(Array.isArray(donacionesInventarioData) ? donacionesInventarioData : [])
-        ];
-
-        setStats({
-          total_comedores: Array.isArray(comedoresData) ? comedoresData.length : 0,
-          comedores_activos: Array.isArray(comedoresData) ? comedoresData.filter((c: any) => c.activo).length : 0,
-          total_donaciones: donacionesCombinadas.length,
-          total_reservas: Array.isArray(reservasData) ? reservasData.length : 0,
-          donaciones_recientes: donacionesCombinadas.filter((d: any) => {
-            const fecha = new Date(d.fecha);
-            const hoy = new Date();
-            const diffTime = Math.abs(hoy.getTime() - fecha.getTime());
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays <= 7;
-          }).length,
-          reservas_pendientes: Array.isArray(reservasData) ? reservasData.filter((r: any) => r.estado === 'pendiente').length : 0
+        const response = await fetch('/api/stats', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`);
+        }
+
+        const statsData = await response.json();
+        setStats(statsData);
       } catch (error) {
         console.error('Error al cargar estadísticas:', error);
-        // Fallback con datos de ejemplo
+        // Mantener el fallback por si la API falla por otra razón
         setStats({
-          total_comedores: 8,
-          comedores_activos: 7,
-          total_donaciones: 15,
-          total_reservas: 23,
-          donaciones_recientes: 3,
-          reservas_pendientes: 5
+          total_comedores: 0,
+          comedores_activos: 0,
+          total_donaciones: 0,
+          total_reservas: 0,
+          donaciones_recientes: 0,
+          reservas_pendientes: 0
         });
       } finally {
         setLoading(false);
