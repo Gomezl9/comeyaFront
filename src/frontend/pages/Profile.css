@@ -39,12 +39,6 @@
   box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
 }
 
-.profile-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
 .profile-card {
   background: white;
   border-radius: 20px;

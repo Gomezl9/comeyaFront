@@ -31,16 +31,6 @@ const Donaciones: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Obtener usuario logueado desde localStorage
-  const userStr = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
-  let currentUserId: number | undefined = undefined;
-  try {
-    const userObj = userStr ? JSON.parse(userStr) : null;
-    if (userObj && typeof userObj.id === 'number') currentUserId = userObj.id;
-  } catch (_e) {
-    currentUserId = undefined;
-  }
-
   useEffect(() => {
     const fetchDonaciones = async () => {
       try {
@@ -179,7 +169,11 @@ const Donaciones: React.FC = () => {
         </div>
 
         <div className="donaciones-recientes">
-          <h2>📋 Donaciones recibidas en mis comedores</h2>
+          <h2>
+            {isAdmin 
+              ? 'Donaciones recibidas en mis comedores' 
+              : 'Mis Donaciones Realizadas'}
+          </h2>
 
           {error && (
             <div className="error-message">

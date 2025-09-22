@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import './Reservas.css';
 import { Comedor } from '../../types/comedor';
+import { useAuth } from '../hooks/useAuth';
 
   interface Reserva {
     id: number;
@@ -14,44 +15,19 @@ import { Comedor } from '../../types/comedor';
   }
 
 const Reservas: React.FC = () => {
+  const { user, isAdmin } = useAuth(); // Usar el hook de autenticación
   const [comedores, setComedores] = useState<Comedor[]>([]);
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [fecha, setFecha] = useState(() => new Date().toISOString().split('T')[0]);
   const [hora, setHora] = useState('');
   const [personas, setPersonas] = useState('');
   const [comedorId, setComedorId] = useState('');
-  // Obtener usuario logueado desde localStorage
-  const [usuarioLogueadoId, setUsuarioLogueadoId] = useState<number | null>(null);
-  const [usuarioId, setUsuarioId] = useState('');
   const [estado, setEstado] = useState('pendiente');
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'nueva' | 'mis-reservas' | 'confirmar-reservas'>('nueva');
   const [editId, setEditId] = useState<number | null>(null);
 
   useEffect(() => {
-    // Obtener usuario del localStorage
-    const userStr = localStorage.getItem('user');
-    console.log('Usuario del localStorage:', userStr);
-    
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        console.log('Usuario parseado:', user);
-        
-        if (user.id) {
-          setUsuarioLogueadoId(user.id);
-          setUsuarioId(user.id.toString());
-          console.log('Usuario ID establecido:', user.id);
-        } else {
-          console.error('No se encontró ID en el usuario');
-        }
-      } catch (e) {
-        console.error('Error al parsear usuario:', e);
-      }
-    } else {
-      console.error('No hay usuario en localStorage');
-    }
-
     const fetchComedores = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -90,7 +66,7 @@ const Reservas: React.FC = () => {
       hora,
       personas,
       comedorId,
-      usuarioLogueadoId
+      'user.id': user?.id
     });
     
     if (!fecha) {
@@ -113,7 +89,7 @@ const Reservas: React.FC = () => {
       alert('Debe seleccionar un comedor');
       return false;
     }
-    if (!usuarioLogueadoId) {
+    if (!user?.id) {
       alert('Usuario no identificado. Por favor, inicia sesión nuevamente');
       return false;
     }
@@ -138,13 +114,13 @@ const Reservas: React.FC = () => {
       return;
     }
     
-    if (!usuarioLogueadoId) {
+    if (!user?.id) {
       alert('Debes iniciar sesión para hacer reservas');
       return;
     }
 
     console.log('Datos de la reserva:', {
-      usuario_id: usuarioLogueadoId,
+      usuario_id: user.id,
       comedor_id: parseInt(comedorId),
       fecha,
       hora,
@@ -162,7 +138,7 @@ const Reservas: React.FC = () => {
 
       let response;
       const reservaPayload = {
-        usuario_id: usuarioLogueadoId,
+        usuario_id: user.id,
         comedor_id: parseInt(comedorId),
         fecha,
         hora,
@@ -247,21 +223,25 @@ const Reservas: React.FC = () => {
           <div className="tabs">
             <button className={`tab ${activeTab === 'nueva' ? 'active' : ''}`} onClick={() => setActiveTab('nueva')}>Nueva Reserva</button>
             <button className={`tab ${activeTab === 'mis-reservas' ? 'active' : ''}`} onClick={() => setActiveTab('mis-reservas')}>Mis Reservas</button>
-            <button className={`tab ${activeTab === 'confirmar-reservas' ? 'active' : ''}`} onClick={() => setActiveTab('confirmar-reservas')}>Confirmar Reservas</button>
+            {isAdmin && (
+              <button className={`tab ${activeTab === 'confirmar-reservas' ? 'active' : ''}`} onClick={() => setActiveTab('confirmar-reservas')}>
+                Confirmar Reservas
+              </button>
+            )}
           </div>
         </div>
-        {activeTab === 'confirmar-reservas' && (
+        {isAdmin && activeTab === 'confirmar-reservas' && (
           <div className="reservas-list-section">
             <h2>Confirmar Reservas</h2>
             {/* Filtrar reservas hechas a comedores creados por el usuario logueado */}
-            {usuarioLogueadoId && reservas.filter(r => {
+            {user?.id && reservas.filter(r => {
               const comedor = comedores.find(c => c.id === r.comedor_id);
-              return comedor && comedor.creado_por === usuarioLogueadoId;
+              return comedor && comedor.creado_por === user.id;
             }).length > 0 ? (
               <div className="reservas-list">
                 {reservas.filter(r => {
                   const comedor = comedores.find(c => c.id === r.comedor_id);
-                  return comedor && comedor.creado_por === usuarioLogueadoId;
+                  return comedor && comedor.creado_por === user.id;
                 }).map(r => {
                   const comedor = comedores.find(c => c.id === r.comedor_id);
                   return (
@@ -407,7 +387,7 @@ const Reservas: React.FC = () => {
                 </div>
               </div>
               {/* Usuario autocompletado y oculto */}
-              <input type="hidden" id="usuario_id" value={usuarioId} readOnly />
+              <input type="hidden" id="usuario_id" value={user?.id} readOnly />
               <button type="submit" className="submit-button" disabled={loading}>
                 {loading ? <>Procesando...</> : (editId ? 'Guardar Cambios' : 'Confirmar Reserva')}
               </button>
@@ -424,9 +404,9 @@ const Reservas: React.FC = () => {
         {activeTab === 'mis-reservas' && (
           <div className="reservas-list-section">
             <h2>Mis Reservas</h2>
-            {usuarioLogueadoId && reservas.filter(r => r.usuario_id === usuarioLogueadoId).length > 0 ? (
+            {user?.id && reservas.filter(r => r.usuario_id === user.id).length > 0 ? (
               <div className="reservas-list">
-                {reservas.filter(r => r.usuario_id === usuarioLogueadoId).map(r => {
+                {reservas.filter(r => r.usuario_id === user.id).map(r => {
                   const comedor = comedores.find(c => c.id === r.comedor_id);
                   return (
                     <div key={r.id} className="reserva-card">

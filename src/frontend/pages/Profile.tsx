@@ -248,35 +248,6 @@ const Profile: React.FC = () => {
             )}
           </div>
         </div>
-
-        <div className="profile-stats">
-          <h3>Estadísticas de Actividad</h3>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">🍽️</div>
-              <div className="stat-info">
-                <span className="stat-number">12</span>
-                <span className="stat-label">Comedores Creados</span>
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">📅</div>
-              <div className="stat-info">
-                <span className="stat-number">45</span>
-                <span className="stat-label">Días Activo</span>
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">⭐</div>
-              <div className="stat-info">
-                <span className="stat-number">4.8</span>
-                <span className="stat-label">Calificación</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -9,21 +9,19 @@ const Sidebar: React.FC = () => {
 
   // Definición base de los items del menú
   const allMenuItems = [
-    { path: '/dashboard', icon: '🏠', label: 'Home', exact: true, admin: false },
-    // El enlace a comedores es condicional
-    isAdmin
-      ? { path: '/comedores', icon: '🍽️', label: 'Comedores', exact: false, admin: true }
-      : { path: '/mapa', icon: '🗺️', label: 'Mapa Comedores', exact: true, admin: false },
-    { path: '/inventario', icon: '📦', label: 'Inventario', exact: true, admin: true },
-    { path: '/servicios', icon: '🛠️', label: 'Servicios', exact: true, admin: false },
-    { path: '/donaciones', icon: '🎁', label: 'Donaciones', exact: true, admin: false },
-    { path: '/reservas', icon: '📅', label: 'Reservas', exact: true, admin: false },
-    { path: '/perfil', icon: '👤', label: 'Mi Perfil', exact: true, admin: false },
-    { path: '/configuracion', icon: '⚙️', label: 'Configuración', exact: true, admin: false },
+    { path: '/dashboard', icon: '🏠', label: 'Home', exact: true, adminOnly: false },
+    { path: '/comedores', icon: '🍽️', label: 'Gestionar Comedores', exact: false, adminOnly: true },
+    { path: '/mapa', icon: '🗺️', label: 'Mapa de Comedores', exact: true, adminOnly: false },
+    { path: '/inventario', icon: '📦', label: 'Inventario', exact: true, adminOnly: true },
+    { path: '/servicios', icon: '🛠️', label: 'Servicios', exact: true, adminOnly: false },
+    { path: '/donaciones', icon: '🎁', label: 'Donaciones', exact: true, adminOnly: false },
+    { path: '/reservas', icon: '📅', label: 'Reservas', exact: true, adminOnly: false },
+    { path: '/perfil', icon: '👤', label: 'Mi Perfil', exact: true, adminOnly: false },
+    { path: '/configuracion', icon: '⚙️', label: 'Configuración', exact: true, adminOnly: false },
   ];
 
   // Filtrar items del menú basados en el rol del usuario
-  const menuItems = allMenuItems.filter(item => !item.admin || (item.admin && isAdmin));
+  const menuItems = allMenuItems.filter(item => !item.adminOnly || isAdmin);
 
   const isActive = (path: string, exact: boolean) => {
     if (exact) {
