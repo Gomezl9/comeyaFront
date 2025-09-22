@@ -4,8 +4,8 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-// Clave de acceso de Mapbox desde variables de entorno
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoiemV0YWplYyIsImEiOiJjbWYxYXY4NnYyN3JhMmtxMmsxdTAxamprIn0.t5jfSaTa---6XVQIJzLNUw';
+// Clave de acceso de Mapbox
+mapboxgl.accessToken = 'pk.eyJ1IjoiemV0YWplYyIsImEiOiJjbWYxYXY4NnYyN3JhMmtxMmsxdTAxamprIn0.t5jfSaTa---6XVQIJzLNUw';
 
 interface Coordenadas {
   lng: number;
@@ -65,7 +65,7 @@ const Mapa: React.FC<MapaProps> = ({
     try {
       // Crear instancia del mapa
       mapRef.current = new mapboxgl.Map({
-        container: mapContainer.current,
+        container: mapContainer.current!,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: coordenadas
           ? [coordenadas.lng, coordenadas.lat]
@@ -80,6 +80,7 @@ const Mapa: React.FC<MapaProps> = ({
     // Permitir sincronizar viewport con el estado externo
     if (setViewport) {
       mapRef.current.on('moveend', () => {
+        if (!mapRef.current) return;
         const center = mapRef.current.getCenter();
         setViewport({
           latitude: center.lat,
@@ -92,7 +93,7 @@ const Mapa: React.FC<MapaProps> = ({
     // Agregar buscador Mapbox Geocoder
        const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
+      mapboxgl: mapboxgl as any,
       placeholder: "Buscar ubicación en Colombia..",
       countries: "co",
       language: "es",
@@ -104,7 +105,7 @@ const Mapa: React.FC<MapaProps> = ({
     });
 
     if (mapRef.current) {
-      mapRef.current.addControl(geocoder, 'top-left');
+      mapRef.current.addControl(geocoder as any, 'top-left');
     }
 
     // Cuando se elige una ubicación desde el buscador
@@ -148,7 +149,7 @@ const Mapa: React.FC<MapaProps> = ({
     multipleMarkers.current.forEach(marker => marker.remove());
     multipleMarkers.current = [];
 
-    comedores.forEach((comedor, index) => {
+    ubicaciones.forEach((ubi, index) => {
       const coords = ubi.coordinates || [];
       if (coords.length === 2 && typeof coords[0] === 'number' && typeof coords[1] === 'number' && !isNaN(coords[0]) && !isNaN(coords[1])) {
         const nombre = nombres[index] || 'Ubicación';
@@ -161,7 +162,7 @@ const Mapa: React.FC<MapaProps> = ({
 
         // Crear y añadir marcador
         const marker = new mapboxgl.Marker({ element: el, color })
-          .setLngLat(coords)
+          .setLngLat(coords as [number, number])
           .setPopup(new mapboxgl.Popup().setText(nombre));
         
         if (mapRef.current) {
@@ -179,7 +180,7 @@ const Mapa: React.FC<MapaProps> = ({
         multipleMarkers.current.push(marker);
       }
     });
-  }, [comedores, iconos, nombres]);
+  }, [comedores, iconos, nombres, ubicaciones]);
 
   // Render del contenedor del mapa
   return (
