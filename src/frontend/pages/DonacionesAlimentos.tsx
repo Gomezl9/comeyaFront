@@ -77,13 +77,23 @@ const DonacionesAlimentos: React.FC = () => {
       return;
     }
 
-    // Simula inventario_id (debes adaptarlo si tienes inventario real)
+    // Validar que comedorId esté seleccionado
+    if (!comedorId) {
+      alert('Por favor selecciona un comedor');
+      setLoading(false);
+      return;
+    }
+
+    // Enviar datos para crear inventario y donación
     const data = {
-      usuario_id,
-      comedor_id: Number(comedorId),
-      cantidad: parseInt(cantidad),
-      fecha
+      usuario_id: Number(usuario_id),
+      comedor_id: Number(comedorId), // ID del comedor seleccionado
+      cantidad: Number(cantidad), // Cantidad de la donación
+      descripcion: descripcion, // Descripción de los alimentos
+      unidad: unidad, // Unidad de medida
+      fecha: fecha
     };
+
 
     try {
       const response = await fetch('http://localhost:3000/api/donacionesinventario', {
@@ -99,12 +109,12 @@ const DonacionesAlimentos: React.FC = () => {
 
       if (response.ok) {
         alert('¡Donación de alimentos registrada exitosamente! 🎉');
-  setCantidad('');
-  setComedorId('');
-  setErrors({});
-  navigate('/Donaciones');
+        setCantidad('');
+        setComedorId('');
+        setErrors({});
+        navigate('/Donaciones');
       } else {
-        alert(result.message || 'Error al registrar donación');
+        alert(`Error al registrar donación: ${result.message || 'Error desconocido'}`);
       }
     } catch (error) {
       console.error('Error:', error);
