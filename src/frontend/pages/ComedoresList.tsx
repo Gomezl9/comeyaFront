@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './ComedoresList.css';
+import { useAuth } from '../hooks/useAuth';
 
 // Función para obtener el ID del usuario actual desde el token
 const getCurrentUserId = (): number | null => {
@@ -48,6 +49,7 @@ interface Comedor {
 }
 
 const ComedoresList: React.FC = () => {
+  const { isAdmin } = useAuth();
   const [comedores, setComedores] = useState<Comedor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -59,9 +61,7 @@ const ComedoresList: React.FC = () => {
 
   // Función para verificar si el usuario puede editar un comedor
   const canEditComedor = (comedor: Comedor): boolean => {
-    const canEdit = currentUserId !== null && comedor.creado_por === currentUserId;
-    console.log(`Comedor ${comedor.nombre}: creado_por=${comedor.creado_por}, currentUserId=${currentUserId}, canEdit=${canEdit}`);
-    return canEdit;
+    return isAdmin;
   };
 
   useEffect(() => {
@@ -205,9 +205,11 @@ const ComedoresList: React.FC = () => {
     <div className="comedores-container">
       <header className="comedores-header">
         <h1>Lista de Comedores</h1>
-        <Link to="/comedores/crear" className="btn-primary">
-          ➕ Crear Nuevo Comedor
-        </Link>
+        {isAdmin && (
+          <Link to="/comedores/crear" className="btn-primary">
+            ➕ Crear Nuevo Comedor
+          </Link>
+        )}
       </header>
 
       {error && (
@@ -222,9 +224,11 @@ const ComedoresList: React.FC = () => {
             <div className="empty-icon">🍽️</div>
             <h3>No hay comedores registrados</h3>
             <p>Comienza creando tu primer comedor comunitario</p>
-            <Link to="/comedores/crear" className="btn-primary">
-              Crear Comedor
-            </Link>
+            {isAdmin && (
+              <Link to="/comedores/crear" className="btn-primary">
+                Crear Comedor
+              </Link>
+            )}
           </div>
         ) : (
           comedores.map((comedor) => (

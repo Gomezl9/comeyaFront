@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import './Servicios.css';
+import { useAuth } from '../hooks/useAuth';
 
 interface Servicio {
 	id?: number;
@@ -17,6 +18,7 @@ interface Comedor {
 }
 
 const Servicios: React.FC = () => {
+	const { isAdmin } = useAuth();
 	const [servicios, setServicios] = useState<Servicio[]>([]);
 	const [comedores, setComedores] = useState<Comedor[]>([]);
 	const [showForm, setShowForm] = useState(false);
@@ -220,18 +222,20 @@ const Servicios: React.FC = () => {
 					<h2>🛎️ Servicios de Mis Comedores</h2>
 					<p className="desc">Gestiona los servicios de los comedores que has creado.</p>
 					
-					<button 
-						className="add-btn" 
-						onClick={() => {
-							setEditingId(null);
-							setForm({ nombre: '', descripcion: '', comedor_id: '' });
-							setShowForm(true);
-						}}
-					>
-						➕ Agregar Servicio
-					</button>
+          {isAdmin && (
+					  <button 
+						  className="add-btn" 
+						  onClick={() => {
+							  setEditingId(null);
+							  setForm({ nombre: '', descripcion: '', comedor_id: '' });
+							  setShowForm(true);
+						  }}
+					  >
+						  ➕ Agregar Servicio
+					  </button>
+          )}
 
-					{showForm && (
+					{showForm && isAdmin && (
 						<form className="servicio-form" onSubmit={handleSubmit}>
 							<h3>{editingId ? 'Editar Servicio' : 'Nuevo Servicio'}</h3>
 							<div>
@@ -307,22 +311,24 @@ const Servicios: React.FC = () => {
 										<div key={servicio.id} className="servicio-card">
 											<div className="servicio-header">
 												<h4>{servicio.nombre}</h4>
-												<div className="servicio-actions">
-													<button 
-														className="edit-btn" 
-														onClick={() => handleEdit(servicio)}
-														title="Editar servicio"
-													>
-														Editar
-													</button>
-													<button 
-														className="delete-btn" 
-														onClick={() => handleDelete(servicio.id!)}
-														title="Eliminar servicio"
-													>
-														Eliminar
-													</button>
-												</div>
+                        {isAdmin && (
+												  <div className="servicio-actions">
+													  <button 
+														  className="edit-btn" 
+														  onClick={() => handleEdit(servicio)}
+														  title="Editar servicio"
+													  >
+														  Editar
+													  </button>
+													  <button 
+														  className="delete-btn" 
+														  onClick={() => handleDelete(servicio.id!)}
+														  title="Eliminar servicio"
+													  >
+														  Eliminar
+													  </button>
+												  </div>
+                        )}
 											</div>
 											<p className="servicio-desc">{servicio.descripcion}</p>
 											<div className="comedor-info">

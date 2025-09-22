@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import './Donaciones.css';
+import { useAuth } from '../hooks/useAuth';
 
 interface DonacionCompleta {
   id: number;
@@ -25,6 +26,7 @@ interface DonacionCompleta {
 
 const Donaciones: React.FC = () => {
   const navigate = useNavigate();
+  const { user, isAdmin } = useAuth();
   const [donacionesRecibidas, setDonacionesRecibidas] = useState<DonacionCompleta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +47,7 @@ const Donaciones: React.FC = () => {
         setLoading(true);
         setError(null);
         
-        if (!currentUserId) {
+        if (!user) {
           setDonacionesRecibidas([]);
           setError('Debes iniciar sesión para ver tus donaciones recibidas.');
           return;
@@ -57,61 +59,60 @@ const Donaciones: React.FC = () => {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         };
 
-        // Llamadas directas a la API
+        // Llamadas a la API
+        const fetchInventarios = isAdmin 
+          ? fetch('http://localhost:3000/api/inventarios', { headers }).then(res => res.ok ? res.json() : [])
+          : Promise.resolve([]);
+
         const [donacionesDinero, donacionesInventario, comedores, inventarios] = await Promise.all([
           fetch('http://localhost:3000/api/donacionesdinero', { headers }).then(res => res.json()),
           fetch('http://localhost:3000/api/donacionesinventario', { headers }).then(res => res.json()),
           fetch('http://localhost:3000/api/comedores', { headers }).then(res => res.json()),
-          fetch('http://localhost:3000/api/inventarios', { headers }).then(res => res.json())
+          fetchInventarios
         ]);
 
-        // Procesar donaciones recibidas únicamente en comedores creados por el usuario actual
-        const comedoresUsuario = comedores.filter((c: any) => c.creado_por === currentUserId);
-        const comedoresIds = comedoresUsuario.map((c: any) => c.id);
-        const donacionesRecibidasData: DonacionCompleta[] = [];
+        let donacionesMostradas: DonacionCompleta[] = [];
 
-        // Donaciones de dinero recibidas
-        donacionesDinero.forEach((donacion: any) => {
-          if (comedoresIds.includes(donacion.comedor_id)) {
-            const comedor = comedoresUsuario.find((c: any) => c.id === donacion.comedor_id);
-            if (comedor) {
-              donacionesRecibidasData.push({
-                id: donacion.id,
-                tipo: 'dinero',
-                monto: donacion.monto,
-                descripcion: `Donación de S/ ${donacion.monto}`,
-                comedor,
-                fecha: donacion.fecha,
-                donante: `Usuario ${donacion.usuario_id}`,
-                usuario_id: donacion.usuario_id
-              });
+        if (isAdmin) {
+          // Lógica para Admin: Mostrar donaciones recibidas en sus comedores
+          const comedoresUsuario = comedores.filter((c: any) => c.creado_por === user?.id);
+          const comedoresIds = comedoresUsuario.map((c: any) => c.id);
+
+          donacionesDinero.forEach((donacion: any) => {
+            if (comedoresIds.includes(donacion.comedor_id)) {
+              const comedor = comedoresUsuario.find((c: any) => c.id === donacion.comedor_id);
+              if (comedor) donacionesMostradas.push({ ...donacion, tipo: 'dinero', comedor, descripcion: `Donación de S/ ${donacion.monto}` });
             }
-          }
-        });
+          });
 
-        // Donaciones de inventario recibidas (vinculadas a inventarios -> comedor)
-        donacionesInventario.forEach((donacion: any) => {
-          // Se asume que la donación de inventario tiene un campo inventario_id
-          const inventario = inventarios.find((inv: any) => inv.id === donacion.inventario_id);
-          const comedorIdAsociado = inventario?.comedor_id ?? inventario?.comedor?.id;
-          if (comedorIdAsociado && comedoresIds.includes(comedorIdAsociado)) {
-            const comedor = comedoresUsuario.find((c: any) => c.id === comedorIdAsociado);
-            if (comedor) {
-              donacionesRecibidasData.push({
-                id: donacion.id,
-                tipo: 'inventario',
-                cantidad: `${donacion.cantidad} unidades`,
-                descripcion: `Donación de inventario (${donacion.cantidad} unidades)`,
-                comedor,
-                fecha: donacion.fecha,
-                donante: `Usuario ${donacion.usuario_id}`,
-                usuario_id: donacion.usuario_id
-              });
-            }
+          if (Array.isArray(inventarios)) {
+            donacionesInventario.forEach((donacion: any) => {
+              const inventario = inventarios.find((inv: any) => inv.id === donacion.inventario_id);
+              const comedorIdAsociado = inventario?.comedor_id;
+              if (comedorIdAsociado && comedoresIds.includes(comedorIdAsociado)) {
+                const comedor = comedoresUsuario.find((c: any) => c.id === comedorIdAsociado);
+                if (comedor) donacionesMostradas.push({ ...donacion, tipo: 'inventario', comedor, descripcion: `Donación de inventario (${donacion.cantidad} unidades)` });
+              }
+            });
           }
-        });
+        } else {
+          // Lógica para Usuario: Mostrar donaciones realizadas por él
+          const donacionesDineroUsuario = donacionesDinero.filter((d: any) => d.usuario_id === user?.id);
+          donacionesDineroUsuario.forEach((donacion: any) => {
+            const comedor = comedores.find((c: any) => c.id === donacion.comedor_id);
+            if (comedor) donacionesMostradas.push({ ...donacion, tipo: 'dinero', comedor, descripcion: `Donación de S/ ${donacion.monto}` });
+          });
 
-        setDonacionesRecibidas(donacionesRecibidasData);
+          const donacionesInventarioUsuario = donacionesInventario.filter((d: any) => d.usuario_id === user?.id);
+          donacionesInventarioUsuario.forEach((donacion: any) => {
+            // Para usuarios, no podemos saber el comedor de la donación de inventario sin acceso a la API de inventario.
+            // Mostraremos la donación con un comedor genérico.
+            const comedorGenerico = { id: 0, nombre: 'Comedor no especificado', direccion: '' };
+            donacionesMostradas.push({ ...donacion, tipo: 'inventario', comedor: comedorGenerico, descripcion: `Donación de inventario (${donacion.cantidad} unidades)` });
+          });
+        }
+        
+        setDonacionesRecibidas(donacionesMostradas);
         
       } catch (error) {
         console.error('Error al cargar donaciones:', error);
@@ -143,7 +144,7 @@ const Donaciones: React.FC = () => {
     };
 
     fetchDonaciones();
-  }, [currentUserId]);
+  }, [user, isAdmin]);
 
   return (
     <Layout>
@@ -180,7 +181,11 @@ const Donaciones: React.FC = () => {
         </div>
 
         <div className="donaciones-recientes">
-          <h2>📋 Donaciones recibidas en mis comedores</h2>
+          <h2>
+            {isAdmin 
+              ? '📋 Donaciones recibidas en mis comedores' 
+              : '💌 Mis Donaciones Realizadas'}
+          </h2>
 
           {error && (
             <div className="error-message">
@@ -197,7 +202,7 @@ const Donaciones: React.FC = () => {
             <div className="donaciones-list">
               {donacionesRecibidas.length > 0 ? (
                 donacionesRecibidas.map((donacion) => (
-                  <div key={donacion.id} className="donacion-card">
+                  <div key={`${donacion.tipo}-${donacion.id}`} className="donacion-card">
                     <div className="donacion-icon">
                       {donacion.tipo === 'inventario' ? '🥘' : '💰'}
                     </div>
@@ -216,15 +221,25 @@ const Donaciones: React.FC = () => {
                         <p><strong>Cantidad:</strong> {donacion.cantidad}</p>
                       )}
                       <div className="donacion-badge">
-                        <span className="badge-recibida">Donación recibida</span>
+                        <span className="badge-recibida">
+                          {isAdmin ? 'Donación recibida' : 'Donación realizada'}
+                        </span>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
                 <div className="no-donaciones">
-                  <p>No has recibido donaciones en tus comedores aún</p>
-                  <p>¡Comparte tus comedores para recibir donaciones!</p>
+                  <p>
+                    {isAdmin
+                      ? 'No has recibido donaciones en tus comedores aún'
+                      : 'Aún no has realizado ninguna donación'}
+                  </p>
+                  <p>
+                    {isAdmin
+                      ? '¡Comparte tus comedores para recibir donaciones!'
+                      : '¡Anímate a donar y ayuda a un comedor!'}
+                  </p>
                 </div>
               )}
             </div>

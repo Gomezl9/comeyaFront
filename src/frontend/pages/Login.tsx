@@ -33,7 +33,8 @@ const Login: React.FC = () => {
           localStorage.setItem('user', JSON.stringify({}));
         }
         localStorage.setItem('token', data.token);
-        navigate('/dashboard');
+        // Forzar una recarga completa para asegurar que el estado de autenticación se actualice en toda la app
+        window.location.href = '/dashboard'; 
       } else {
         alert(data.message || 'Credenciales inválidas');
       }

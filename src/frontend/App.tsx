@@ -16,13 +16,30 @@ import DonacionesDinero from './pages/DonacionesDinero';
 import Reservas from './pages/Reservas';
 import Inventario from './pages/Inventario';
 import Servicios from './pages/servicios';
+import { useAuth } from './hooks/useAuth';
 
 
 
 // Componente para proteger rutas que requieren autenticación
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const user = localStorage.getItem('user');
-  return user ? <Layout>{children}</Layout> : <Navigate to="/" replace />;
+const ProtectedRoute: React.FC<{ children: React.ReactNode; isAdminRoute?: boolean }> = ({ children, isAdminRoute }) => {
+  const { user, isAdmin, loading } = useAuth();
+
+  // Mientras se verifica el estado de autenticación, mostrar un estado de carga
+  if (loading) {
+    return <div>Verificando acceso...</div>;
+  }
+
+  // Si no hay usuario después de verificar, redirigir al login
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Si la ruta es para administradores y el usuario no lo es, redirigir
+  if (isAdminRoute && !isAdmin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Layout>{children}</Layout>;
 };
 
 function App() {
@@ -69,7 +86,11 @@ function App() {
           />
           <Route 
             path="/Inventario" 
-            element={<Inventario />} 
+            element={
+              <ProtectedRoute isAdminRoute={true}>
+                <Inventario />
+              </ProtectedRoute>
+            } 
           />
           <Route 
             path="/servicios" 
@@ -82,7 +103,7 @@ function App() {
           <Route 
             path="/comedores/crear" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAdminRoute={true}>
                 <ComedoresCreate />
               </ProtectedRoute>
             } 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
+import { useAuth } from '../hooks/useAuth';
 
 // SVG Icons as React Components for better control and styling
 const IconComedores = () => (
@@ -32,6 +33,7 @@ interface QuickStats {
 }
 
 const Dashboard: React.FC = () => {
+  const { user: authUser, isAdmin } = useAuth();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [stats, setStats] = useState<QuickStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -154,26 +156,35 @@ const Dashboard: React.FC = () => {
       <div className="actions-panel">
         <h2>Panel de Acciones</h2>
         <div className="actions-grid">
-          <Link to="/comedores" className="action-card">
-            <IconComedor />
-            <span>Comedores</span>
-            <p>Registra un nuevo espacio comunitario.</p>
-          </Link>
-          <Link to="/DonacionesDinero" className="action-card">
-            <IconDonaciones />
+          {isAdmin && (
+            <Link to="/comedores/crear" className="action-card">
+              <IconComedor />
+              <span>Nuevo Comedor</span>
+              <p>Registra un nuevo espacio comunitario.</p>
+            </Link>
+          )}
+          <Link to="/mapa" className="action-card">
+            <IconComedores />
             <span>Mapa de Comedores</span>
-            <p>Apoya económicamente a la red.</p>
+            <p>Explora los comedores en el mapa.</p>
           </Link>
           <Link to="/DonacionesAlimentos" className="action-card">
             <IconDonaciones />
             <span>Donar Alimentos</span>
             <p>Contribuye con productos para los comedores.</p>
           </Link>
-          <Link to="/inventario" className="action-card">
-            <IconInventario />
-            <span>Inventario</span>
-            <p>Revisa el inventario de los comedores.</p>
+          <Link to="/DonacionesDinero" className="action-card">
+            <IconDonaciones />
+            <span>Donar Dinero</span>
+            <p>Apoya económicamente a la red.</p>
           </Link>
+          {isAdmin && (
+            <Link to="/inventario" className="action-card">
+              <IconInventario />
+              <span>Inventario</span>
+              <p>Revisa el inventario de los comedores.</p>
+            </Link>
+          )}
           <Link to="/Reservas" className="action-card">
             <IconReservas />
             <span>Hacer Reserva</span>

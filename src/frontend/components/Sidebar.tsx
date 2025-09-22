@@ -1,22 +1,29 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
+import { useAuth } from '../hooks/useAuth';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const { user, isAdmin } = useAuth();
 
-  const menuItems = [
-    { path: '/dashboard', icon: '🏠', label: 'Home', exact: true },
-    { path: '/comedores', icon: '🍽️', label: 'Comedores', exact: false },
-    { path: '/mapa', icon: '🗺️', label: 'Mapa', exact: true },
-    { path: '/inventario', icon: '📦', label: 'Inventario', exact: true },
-    { path: '/servicios', icon: '🛠️', label: 'Servicios', exact: true },
-    { path: '/donaciones', icon: '🎁', label: 'Donaciones', exact: true },
-    { path: '/reservas', icon: '📅', label: 'Reservas', exact: true },
-    { path: '/perfil', icon: '👤', label: 'Mi Perfil', exact: true },
-    { path: '/configuracion', icon: '⚙️', label: 'Configuración', exact: true },
+  // Definición base de los items del menú
+  const allMenuItems = [
+    { path: '/dashboard', icon: '🏠', label: 'Home', exact: true, admin: false },
+    // El enlace a comedores es condicional
+    isAdmin
+      ? { path: '/comedores', icon: '🍽️', label: 'Comedores', exact: false, admin: true }
+      : { path: '/mapa', icon: '🗺️', label: 'Mapa Comedores', exact: true, admin: false },
+    { path: '/inventario', icon: '📦', label: 'Inventario', exact: true, admin: true },
+    { path: '/servicios', icon: '🛠️', label: 'Servicios', exact: true, admin: false },
+    { path: '/donaciones', icon: '🎁', label: 'Donaciones', exact: true, admin: false },
+    { path: '/reservas', icon: '📅', label: 'Reservas', exact: true, admin: false },
+    { path: '/perfil', icon: '👤', label: 'Mi Perfil', exact: true, admin: false },
+    { path: '/configuracion', icon: '⚙️', label: 'Configuración', exact: true, admin: false },
   ];
+
+  // Filtrar items del menú basados en el rol del usuario
+  const menuItems = allMenuItems.filter(item => !item.admin || (item.admin && isAdmin));
 
   const isActive = (path: string, exact: boolean) => {
     if (exact) {
@@ -31,8 +38,8 @@ const Sidebar: React.FC = () => {
         <h2>COMEYA!</h2>
         <div className="user-info">
           <div className="user-avatar">👤</div>
-          <span className="user-name" title={user.email || 'Usuario'}>
-            {user.nombre || user.email || 'Usuario'}
+          <span className="user-name" title={user?.correo || 'Usuario'}>
+            {user?.nombre || user?.correo || 'Usuario'}
           </span>
         </div>
       </div>
